@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project basedir="." default="all" name="VillagePeople">
+	<property name="explicitlib.dir" value="../explicitlib"/>
+    <property name="src.dir" value="src"/>
+    <property name="build.dir" value="build"/>
+    <property name="output.dir" value="dist"/>
+    <property name="libs.dir" value="libs"/>
+    <property name="junit.reports.dir" value="reports/junit"/>
+    <property name="checkstyle.reports.dir" value="reports/checkstyle"/>
+    <property name="config.dir" value="config"/>
+    <property name="checkstyle.config.dir" value="${config.dir}/checkstyle"/>
+    <property name="findbugs.home.dir" value="/home/pureza/findbugs-1.3.2"/>
+
+    <!-- Build classpath -->
+    <path id="build.classpath">
+        <fileset dir="${libs.dir}" includes="**/*.jar"/>
+    	<pathelement location="${explicitlib.dir}/build/classes"/>
+    </path>
+
+    <!-- Run classpath -->
+    <path id="run.classpath">
+        <pathelement location="${build.dir}/classes"/>
+        <fileset dir="${libs.dir}" includes="**/*.jar"/>
+    	<pathelement location="${explicitlib.dir}/build/classes"/>
+    </path>
+
+
+    <target name="init">
+        <mkdir dir="${build.dir}/classes"/>
+        <mkdir dir="${output.dir}/lib"/>
+        <mkdir dir="${junit.reports.dir}"/>
+        <mkdir dir="${checkstyle.reports.dir}"/>
+    </target>
+    
+    
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+        <delete dir="${output.dir}"/>
+        <delete dir="reports"/>
+    </target>
+
+
+	<!-- Build depency projects -->
+	<target name="build-deps">
+	    <ant antfile="${explicitlib.dir}/build.xml" 
+	    	 inheritAll="false" target="build">
+	        <propertyset>
+	            <propertyref name="build.compiler"/>
+	        </propertyset>
+	    </ant>
+	</target>
+	
+	
+    <!-- Build -->
+    <target name="build" depends="init, build-deps">
+        <javac destdir="${build.dir}/classes">
+            <src path="${src.dir}"/>
+            <classpath refid="build.classpath"/>
+        </javac>
+    </target>
+
+
+    <!-- Create .jar file -->    
+    <target name="jar" depends="build">
+        <jar destfile="${output.dir}/lib/VillagePeople.jar" 
+             basedir="${build.dir}/classes"/>
+    </target>
+
+    
+    <!-- Run JUnit -->
+    <target name="test" depends="build">
+        <junit printsummary="yes" haltonfailure="yes">
+            <formatter type="xml"/>
+            <classpath refid="run.classpath" />
+            <batchtest fork="yes" todir="${junit.reports.dir}">
+                <fileset dir="${src.dir}">
+                      <include name="test/**/*.java"/>
+                </fileset>
+            </batchtest>
+        </junit>
+
+        <junitreport todir="${junit.reports.dir}">
+            <fileset dir="${junit.reports.dir}">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report todir="${junit.reports.dir}/html"/>
+        </junitreport>
+    </target>
+
+    
+    <!-- Run CheckStyle with ExplicitSoft checks -->
+    <target name="checkstyle" depends="init">
+        <taskdef resource="checkstyletask.properties" 
+            classpath="${libs.dir}/checkstyle-all-4.4.jar"/>
+
+        <checkstyle config="${checkstyle.config.dir}/explicit_checks.xml">
+            <fileset dir="${src.dir}/villagepeople" includes="**/geometry/*.java"/>
+            <formatter type="plain"/>
+            <formatter type="xml" toFile="${checkstyle.reports.dir}/checkstyle_errors.xml"/>
+        </checkstyle>
+
+        <xslt in="${checkstyle.reports.dir}/checkstyle_errors.xml" 
+              out="${checkstyle.reports.dir}/checkstyle_report.html" 
+              style="${checkstyle.config.dir}/checkstyle-noframes.xsl"/>
+    </target>
+    
+    
+    <!-- Run FindBugs -->
+    <target name="findbugs" depends="jar">
+        <taskdef name="findbugs"  
+        	     classname="edu.umd.cs.findbugs.anttask.FindBugsTask"/>
+        
+        <findbugs home="${findbugs.home.dir}/lib" output="xml">
+            <class location="${output.dir}/lib/VillagePeople.jar" />
+        </findbugs>
+    </target>
+
+
+    <!-- Run the simulator -->
+    <target name="run" depends="build">
+        <java classname="villagepeople.game.Main" failonerror="true" fork="yes">
+            <jvmarg line="-Dlog4j.configuration=log4j.properties -ea"/>
+            <arg line="-m maps/map1.map"/>
+            <classpath refid="run.classpath"/>
+        </java>
+    </target>
+	
+	
+    <target name="all" depends="test, checkstyle, run"/>
+</project>
