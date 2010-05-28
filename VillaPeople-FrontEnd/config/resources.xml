@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <textures dir="textures/">
+        <texture id="floor"        file="chao.bmp"         flip="false"/>
+        <texture id="wall"         file="parede.bmp"       flip="false"/>
+        <texture id="duke.body"    file="duke.png"         flip="false"/>
+        <texture id="duke.jetpack" file="jetpack.png"      flip="false"/>
+        <texture id="duke.rpg"     file="rpg.png"          flip="false"/>
+        <texture id="rocket"       file="rocket.png"       flip="false"/>
+        <texture id="explosion"    file="explosion###.png" flip="true"
+                 animated="true" length="21"/>
+        <texture id="firstaid"     file="firstaid.png"     flip="true"/>
+        <texture id="smoke"        file="res.png"        flip="false"/>
+    </textures>
+    
+    <models dir="models/">
+		<model id="duke" file="duke.md3">
+			<scale factor="0.01"/>
+			<default-normal x="0" y="0" z="1"/>
+			<mesh-textures>
+				<mesh-texture id="duke.jetpack"/>
+				<mesh-texture id="duke.body"/>
+				<mesh-texture id="duke.rpg"/>
+			</mesh-textures>
+			<animations>
+				<animation id="idle">
+					<start>0</start>
+					<end>10</end>
+				</animation>
+				<animation id="jetpack">
+                    <start>11</start>
+                    <end>27</end>
+                </animation>
+				<animation id="run">
+					<start>28</start>
+					<end>43</end>
+				</animation>
+				<animation id="kick">
+                    <start>44</start>
+                    <end>48</end>
+                </animation>
+                <animation id="jump">
+                    <start>49</start>
+                    <end>54</end>
+                </animation>
+                <animation id="crouch">
+                    <start>55</start>
+                    <end>59</end>
+                </animation>
+                <animation id="die">
+                    <start>60</start>
+                    <end>70</end>
+                </animation>
+                <animation id="swim">
+                    <start>71</start>
+                    <end>86</end>
+                </animation>
+			</animations>
+		</model>
+		
+        <model id="rocket" file="rocket.md3">
+            <scale factor="0.0005"/>
+            <default-normal x="0" y="0" z="1"/>
+            <mesh-textures>
+                <mesh-texture id="rocket"/>
+            </mesh-textures>
+            <animations>
+            </animations>
+        </model>
+	</models>
+</resources>

@@ -1,0 +1,37 @@
+# Number of cells - horizontal x vertical
+cells 30x20
+
+# A wall from cell (1, 1) to cell (10, 20) and then to cell (100, 100)
+#wall (12, 13) (12, 7) (18, 7) (18, 13) (15, 13)
+
+wall (3, 15) (26, 15)
+wall (4, 13) (4, 7)
+wall (6, 12) (6, 8)
+wall (9, 11) (9, 9)
+wall (11, 10)
+wall (26, 12) (26, 6)
+wall (23, 12) (23, 6)
+wall (23, 5) (26, 5)
+wall (4, 6) (17, 6)
+wall (4, 5) (4, 3)
+wall (17, 5) (17, 3)
+wall (20, 11) (20, 9)
+wall (18, 10) (18, 10)
+
+
+first-aid (17, 17)
+first-aid (5, 10)
+first-aid (25, 10)
+first-aid (14, 4)
+first-aid (13, 4)
+first-aid (6, 4)
+first-aid (17, 18)
+first-aid (20, 4)
+first-aid (15, 10)
+
+weapon rocket_launcher (6, 3)
+weapon laser_gun (12, 10)
+weapon hand_gun (12, 18)
+weapon laser_gun (16, 18)
+
+
